@@ -1,43 +1,68 @@
 # Project Idea Submission
 
-1. **Project Title:**  
-Personal Finance Tracker – Mobile App
+**Project Title:**  
+Personal Finance Tracker – Mobile App  
 
-2. **Your Name & Roll Number:**  
-Yash Pratap Singh Solanki – 2024-B-18112003
+**Your Name & Roll Number:**  
+Yash Pratap Singh Solanki – 2024-B-18112003  
 
-3. **Problem Statement:**  
-"Many people struggle to keep track of their spending habits and often overspend without realizing it. Manual methods like paper logs or spreadsheets are time-consuming and lack convenience. This project aims to create a mobile solution that enables users to easily record and analyze their income and expenses, helping them make informed financial decisions."
+---
 
-4. **Proposed Solution / Idea:**  
-"A React Native mobile application that allows users to quickly log income and expense transactions, categorize them, and visualize spending patterns using charts. The app will store data locally for offline access, and provide a clean, intuitive interface for daily financial tracking."
+## Problem Statement  
+Many people struggle to keep track of their spending habits and often overspend without realizing it. Manual methods like paper logs or spreadsheets are time-consuming and lack convenience. Existing solutions often fail to support multi-user access, secure authentication, or cross-device usage. This project aims to build a multi-user mobile solution that enables individuals to securely record and analyze their income and expenses, with data stored in a structured backend system.  
 
-5. **Key Features:**  
-- Add, edit, and delete income/expense entries  
-- Categorize transactions (Food, Transport, Shopping, Bills, etc.)  
-- View monthly summaries with charts  
-- Budget tracking and spending alerts  
-- Dark mode support  
-- Local data storage for offline use  
+---
 
-6. **Target Users / Audience:**  
-"Individuals who want to manage their personal finances more effectively, including students, working professionals, and small business owners."
+## Proposed Solution / Idea  
+A React Native mobile application integrated with a **Node.js + Express backend** and a **MySQL database (managed using Prisma ORM)**. Users can sign up, log in securely, and manage their financial transactions (income and expenses). Data will be categorized, stored centrally, and visualized through charts for spending analysis. Local caching with AsyncStorage will enable offline access, syncing data with the backend once online.  
 
-7. **Technology Stack:**  
-- **Frontend:** React Native  
+---
+
+## Key Features  
+- **User Authentication**: Signup/Login with secure password hashing (JWT-based auth).  
+- **Transaction Management**: Add, edit, delete income/expense records.  
+- **Categorization**: Organize transactions (Food, Transport, Shopping, Bills, etc.).  
+- **Analytics & Charts**: Monthly summaries and category-wise spending breakdown.  
+- **Budget Tracking**: Set budgets and get spending alerts.  
+- **Dark Mode**: UI theme toggle.  
+- **Offline Support**: Cache with AsyncStorage, syncing with server.  
+
+---
+
+## Target Users / Audience  
+Individuals who want to manage their personal finances more effectively, including students, working professionals, and small business owners. The app is built for multiple users with secure login and centralized storage.  
+
+---
+
+## Technology Stack  
+
+- **Frontend (Mobile App):** React Native  
 - **Navigation:** React Navigation  
-- **Data Storage:** AsyncStorage  
-- **Charts:** react-native-chart-kit  
 - **State Management:** Context API or Redux (optional)  
+- **Offline Storage (Cache):** AsyncStorage  
+- **Backend:** Node.js with Express.js (REST API)  
+- **Database:** MySQL (Relational DB for structured financial data)  
+- **ORM:** Prisma (for database schema management & queries)  
+- **Authentication:** JSON Web Tokens (JWT)  
+- **Charts & Visualization:** react-native-chart-kit  
 
-8. **Expected Outcome:**  
-"A fully functional mobile application where users can input transactions, view spending patterns in charts, and track budgets. All features will work offline using local storage, providing a smooth and responsive user experience."
+---
 
-9. **Timeline:**  
-- **Week 1–2:** UI/UX design and component setup  
-- **Week 3–4:** Implement transaction management (add/edit/delete) and local storage  
-- **Week 5:** Integrate charts and analytics view  
-- **Week 6:** Testing, UI polishing, and dark mode implementation  
+## Expected Outcome  
+A fully functional multi-user mobile application where users can create accounts, manage financial transactions, and visualize spending through charts. The app ensures secure backend integration with MySQL via Prisma, provides offline usability with local caching, and delivers a smooth and user-friendly experience.  
 
-10. **Additional Notes:**  
-"Future versions could integrate cloud sync, multi-currency support, and authentication for storing personal finance data securely online."
+---
+
+## Timeline  
+
+- **Week 1–2:** UI/UX design and component setup in React Native  
+- **Week 3–4:** Setup backend with Node.js + Express, implement authentication  
+- **Week 5:** Connect backend with MySQL using Prisma ORM, build transaction APIs  
+- **Week 6:** Integrate React Native app with backend APIs (CRUD operations)  
+- **Week 7:** Add charts, analytics, budget tracking, and offline caching  
+- **Week 8:** Testing, debugging, UI polishing, and dark mode support  
+
+---
+
+## Additional Notes  
+Future enhancements may include cloud sync across devices, role-based access (e.g., shared family accounts), AI-driven financial insights, and multi-currency support.  
