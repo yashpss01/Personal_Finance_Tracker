@@ -1,44 +1,44 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Appbar, Card, Title, Paragraph } from 'react-native-paper';
+import React from 'react'
+import { View, StyleSheet } from 'react-native'
+import { Appbar, Card, Title, Paragraph } from 'react-native-paper'
 
 export default function TransactionsScreen() {
   return (
-    <View style={styles.container}>
+    <View style={styles.main}>
       <Appbar.Header>
-        <Appbar.Content title="Transactions" />
+        <Appbar.Content title="My History" />
       </Appbar.Header>
       
-      <View style={styles.content}>
-        <Card style={styles.card}>
+      <View style={styles.body}>
+        <Card style={styles.box}>
           <Card.Content>
-            <Title>Transaction History</Title>
-            <Paragraph style={styles.placeholder}>
-              No transactions yet. Add your first transaction to see it here!
+            <Title>Money History</Title>
+            <Paragraph style={styles.text}>
+              No money added yet. Start adding to see your history!
             </Paragraph>
           </Card.Content>
         </Card>
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  main: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
-  content: {
+  body: {
     flex: 1,
-    padding: 16,
+    padding: 16
   },
-  card: {
-    elevation: 2,
+  box: {
+    elevation: 2
   },
-  placeholder: {
+  text: {
     textAlign: 'center',
     fontStyle: 'italic',
     color: '#666',
-    marginTop: 16,
-  },
-});
+    marginTop: 16
+  }
+})

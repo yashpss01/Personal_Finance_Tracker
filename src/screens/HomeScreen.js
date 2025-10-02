@@ -1,60 +1,60 @@
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import { Appbar, Card, Title, Paragraph, FAB } from 'react-native-paper';
+import React from 'react'
+import { View, StyleSheet } from 'react-native'
+import { Appbar, Card, Title, Paragraph, FAB } from 'react-native-paper'
 
 export default function HomeScreen({ navigation }) {
+  function goToAddMoney() {
+    navigation.navigate('Add Money')
+  }
+
   return (
-    <View style={styles.container}>
+    <View style={styles.main}>
       <Appbar.Header>
-        <Appbar.Content title="Personal Finance Tracker" />
+        <Appbar.Content title="My Money Tracker" />
       </Appbar.Header>
       
-      <View style={styles.content}>
-        <Card style={styles.card}>
+      <View style={styles.body}>
+        <Card style={styles.box}>
           <Card.Content>
-            <Title>Current Balance</Title>
-            <Paragraph style={styles.balance}>₹0.00</Paragraph>
+            <Title>My Balance</Title>
+            <Paragraph style={styles.money}>₹0.00</Paragraph>
           </Card.Content>
         </Card>
 
-        <Card style={styles.card}>
+        <Card style={styles.box}>
           <Card.Content>
-            <Title>Monthly Summary</Title>
-            <Paragraph>Monthly Summary will appear here.</Paragraph>
+            <Title>This Month</Title>
+            <Paragraph>Your monthly summary will show here</Paragraph>
           </Card.Content>
         </Card>
       </View>
 
-      <FAB
-        style={styles.fab}
-        icon="plus"
-        onPress={() => navigation.navigate('Add Transaction')}
-      />
+      <FAB style={styles.btn} icon="plus" onPress={goToAddMoney} />
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  main: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
-  content: {
+  body: {
     flex: 1,
-    padding: 16,
+    padding: 16
   },
-  card: {
+  box: {
     marginBottom: 16,
-    elevation: 2,
+    elevation: 2
   },
-  balance: {
+  money: {
     fontSize: 32,
     fontWeight: 'bold',
     color: '#6200ee',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 8
   },
-  fab: {
+  btn: {
     position: 'absolute',
     margin: 16,
     right: 0,
@@ -62,11 +62,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#6200ee',
     elevation: 8,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-  },
-});
+    shadowRadius: 4.65
+  }
+})

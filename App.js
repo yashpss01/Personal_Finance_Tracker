@@ -1,44 +1,44 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { PaperProvider } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React from 'react'
+import { NavigationContainer } from '@react-navigation/native'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { PaperProvider } from 'react-native-paper'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
-import HomeScreen from './src/screens/HomeScreen';
-import AddTransactionScreen from './src/screens/AddTransactionScreen';
-import TransactionsScreen from './src/screens/TransactionsScreen';
+import Home from './src/screens/HomeScreen'
+import AddMoney from './src/screens/AddTransactionScreen'
+import History from './src/screens/TransactionsScreen'
 
-const Tab = createBottomTabNavigator();
+const Tabs = createBottomTabNavigator()
+
+function getIcon(screenName, isActive) {
+  if (screenName === 'Home') return isActive ? 'home' : 'home-outline'
+  if (screenName === 'Add Money') return isActive ? 'plus-circle' : 'plus-circle-outline'
+  if (screenName === 'History') return 'format-list-bulleted'
+}
 
 export default function App() {
   return (
     <PaperProvider>
       <NavigationContainer>
-        <Tab.Navigator
+        <Tabs.Navigator
           screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => {
-              let iconName;
-
-              if (route.name === 'Home') {
-                iconName = focused ? 'home' : 'home-outline';
-              } else if (route.name === 'Add Transaction') {
-                iconName = focused ? 'plus-circle' : 'plus-circle-outline';
-              } else if (route.name === 'Transactions') {
-                iconName = focused ? 'format-list-bulleted' : 'format-list-bulleted';
-              }
-
-              return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
-            },
+            tabBarIcon: ({ focused, color, size }) => (
+              <MaterialCommunityIcons 
+                name={getIcon(route.name, focused)} 
+                size={size} 
+                color={color} 
+              />
+            ),
             tabBarActiveTintColor: '#6200ee',
             tabBarInactiveTintColor: 'gray',
-            headerShown: false,
+            headerShown: false
           })}
         >
-          <Tab.Screen name="Home" component={HomeScreen} />
-          <Tab.Screen name="Add Transaction" component={AddTransactionScreen} />
-          <Tab.Screen name="Transactions" component={TransactionsScreen} />
-        </Tab.Navigator>
+          <Tabs.Screen name="Home" component={Home} />
+          <Tabs.Screen name="Add Money" component={AddMoney} />
+          <Tabs.Screen name="History" component={History} />
+        </Tabs.Navigator>
       </NavigationContainer>
     </PaperProvider>
-  );
+  )
 }

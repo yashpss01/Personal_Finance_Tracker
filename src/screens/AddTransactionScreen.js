@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Alert, Platform, Modal, FlatList } from 'react-native';
+import React, { useState } from 'react'
+import { View, StyleSheet, ScrollView, Alert, Platform, Modal, FlatList } from 'react-native'
 import { 
   Appbar, 
   TextInput, 
@@ -11,169 +11,170 @@ import {
   TouchableRipple,
   List,
   Divider
-} from 'react-native-paper';
-import DateTimePicker from '@react-native-community/datetimepicker';
+} from 'react-native-paper'
+import DateTimePicker from '@react-native-community/datetimepicker'
 
 export default function AddTransactionScreen() {
-  const [amount, setAmount] = useState('');
-  const [category, setCategory] = useState('');
-  const [type, setType] = useState('expense');
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+  const [money, setMoney] = useState('')
+  const [picked, setPicked] = useState('')
+  const [kind, setKind] = useState('expense')
+  const [when, setWhen] = useState(new Date())
+  const [showPicker, setShowPicker] = useState(false)
+  const [showList, setShowList] = useState(false)
   
-  // Predefined categories
-  const incomeCategories = ['Salary', 'Freelance', 'Investment', 'Gift', 'Other Income'];
-  const expenseCategories = ['Food', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Healthcare', 'Education', 'Other Expense'];
+  const earnList = ['Salary', 'Freelance', 'Investment', 'Gift', 'Other Income']
+  const spendList = ['Food', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Healthcare', 'Education', 'Other Expense']
   
-  const getCurrentCategories = () => {
-    return type === 'income' ? incomeCategories : expenseCategories;
-  };
+  function getList() {
+    return kind === 'income' ? earnList : spendList
+  }
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(Platform.OS === 'ios');
-    setDate(currentDate);
-  };
+  function pickDate(event, newDate) {
+    const chosenDate = newDate || when
+    setShowPicker(Platform.OS === 'ios')
+    setWhen(chosenDate)
+  }
 
-  const handleTypeChange = (newType) => {
-    setType(newType);
-    setCategory(''); // Reset category when type changes
-  };
+  function changeKind(newKind) {
+    setKind(newKind)
+    setPicked('')
+  }
 
-  const handleSave = () => {
-    if (!amount || !category) {
-      Alert.alert('Error', 'Please fill in all fields');
-      return;
+  function saveMoney() {
+    if (!money || !picked) {
+      Alert.alert('Missing Info', 'Please fill all fields')
+      return
     }
-    Alert.alert('Success', 'Transaction Saved!');
-    // Reset form
-    setAmount('');
-    setCategory('');
-    setType('expense');
-    setDate(new Date());
-  };
+    Alert.alert('Done!', 'Money saved!')
+    setMoney('')
+    setPicked('')
+    setKind('expense')
+    setWhen(new Date())
+  }
+
+  function openList() {
+    setShowList(true)
+  }
+
+  function closeList() {
+    setShowList(false)
+  }
+
+  function pickItem(item) {
+    setPicked(item)
+    closeList()
+  }
+
+  function openDate() {
+    setShowPicker(true)
+  }
 
   return (
-    <View style={styles.container}>
+    <View style={styles.main}>
       <Appbar.Header>
-        <Appbar.Content title="Add Transaction" />
+        <Appbar.Content title="Add Money" />
       </Appbar.Header>
       
-      <ScrollView style={styles.content}>
-        <Card style={styles.card}>
+      <ScrollView style={styles.body}>
+        <Card style={styles.box}>
           <Card.Content>
-            <Title style={styles.sectionTitle}>Transaction Details</Title>
+            <Title style={styles.title}>Money Details</Title>
             
             <TextInput
               label="Amount (₹)"
-              value={amount}
-              onChangeText={setAmount}
+              value={money}
+              onChangeText={setMoney}
               keyboardType="numeric"
               mode="outlined"
-              style={styles.input}
+              style={styles.field}
               left={<TextInput.Icon icon="currency-inr" />}
             />
 
-            <View style={styles.radioSection}>
-              <Text style={styles.radioTitle}>Type</Text>
-              <RadioButton.Group onValueChange={handleTypeChange} value={type}>
-                <TouchableRipple onPress={() => handleTypeChange('income')}>
-                  <View style={styles.radioItem}>
+            <View style={styles.radio}>
+              <Text style={styles.label}>Type</Text>
+              <RadioButton.Group onValueChange={changeKind} value={kind}>
+                <TouchableRipple onPress={() => changeKind('income')}>
+                  <View style={styles.item}>
                     <RadioButton value="income" />
-                    <Text style={styles.radioLabel}>Income</Text>
+                    <Text style={styles.text}>Earn</Text>
                   </View>
                 </TouchableRipple>
-                <TouchableRipple onPress={() => handleTypeChange('expense')}>
-                  <View style={styles.radioItem}>
+                <TouchableRipple onPress={() => changeKind('expense')}>
+                  <View style={styles.item}>
                     <RadioButton value="expense" />
-                    <Text style={styles.radioLabel}>Expense</Text>
+                    <Text style={styles.text}>Spend</Text>
                   </View>
                 </TouchableRipple>
               </RadioButton.Group>
             </View>
 
-            <TouchableRipple onPress={() => setCategoryModalVisible(true)}>
+            <TouchableRipple onPress={openList}>
               <TextInput
                 label="Category"
-                value={category}
+                value={picked}
                 mode="outlined"
-                style={styles.input}
+                style={styles.field}
                 editable={false}
                 right={<TextInput.Icon icon="chevron-down" />}
                 left={<TextInput.Icon icon="tag" />}
               />
             </TouchableRipple>
 
-            <TouchableRipple onPress={() => setShowDatePicker(true)}>
+            <TouchableRipple onPress={openDate}>
               <TextInput
                 label="Date"
-                value={date.toLocaleDateString()}
+                value={when.toLocaleDateString()}
                 mode="outlined"
-                style={styles.input}
+                style={styles.field}
                 editable={false}
                 left={<TextInput.Icon icon="calendar" />}
               />
             </TouchableRipple>
 
-            {showDatePicker && (
+            {showPicker && (
               <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
+                value={when}
                 mode="date"
                 is24Hour={true}
                 display="default"
-                onChange={handleDateChange}
+                onChange={pickDate}
               />
             )}
           </Card.Content>
         </Card>
 
-        <Button
-          mode="contained"
-          onPress={handleSave}
-          style={styles.saveButton}
-          contentStyle={styles.saveButtonContent}
-        >
-          Save Transaction
+        <Button mode="contained" onPress={saveMoney} style={styles.save}>
+          Save Money
         </Button>
       </ScrollView>
 
-      {/* Category Selection Modal */}
       <Modal
-        visible={categoryModalVisible}
-        onRequestClose={() => setCategoryModalVisible(false)}
+        visible={showList}
+        onRequestClose={closeList}
         animationType="slide"
         transparent={true}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
+        <View style={styles.back}>
+          <View style={styles.popup}>
             <Card>
               <Card.Content>
-                <Title style={styles.modalTitle}>
-                  Select {type === 'income' ? 'Income' : 'Expense'} Category
+                <Title style={styles.head}>
+                  Pick {kind === 'income' ? 'Earn' : 'Spend'} Type
                 </Title>
-                <Divider style={styles.modalDivider} />
+                <Divider style={styles.line} />
                 <FlatList
-                  data={getCurrentCategories()}
+                  data={getList()}
                   keyExtractor={(item) => item}
                   renderItem={({ item }) => (
                     <List.Item
                       title={item}
-                      onPress={() => {
-                        setCategory(item);
-                        setCategoryModalVisible(false);
-                      }}
+                      onPress={() => pickItem(item)}
                       left={(props) => <List.Icon {...props} icon="tag" />}
-                      style={styles.categoryItem}
+                      style={styles.pick}
                     />
                   )}
                 />
-                <Button
-                  mode="outlined"
-                  onPress={() => setCategoryModalVisible(false)}
-                  style={styles.cancelButton}
-                >
+                <Button mode="outlined" onPress={closeList} style={styles.cancel}>
                   Cancel
                 </Button>
               </Card.Content>
@@ -182,77 +183,74 @@ export default function AddTransactionScreen() {
         </View>
       </Modal>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
+  main: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f5f5f5'
   },
-  content: {
+  body: {
     flex: 1,
-    padding: 16,
+    padding: 16
   },
-  card: {
+  box: {
     marginBottom: 16,
-    elevation: 2,
+    elevation: 2
   },
-  sectionTitle: {
+  title: {
     marginBottom: 16,
-    color: '#6200ee',
+    color: '#6200ee'
   },
-  input: {
-    marginBottom: 16,
+  field: {
+    marginBottom: 16
   },
-  radioSection: {
-    marginBottom: 16,
+  radio: {
+    marginBottom: 16
   },
-  radioTitle: {
+  label: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#333',
+    color: '#333'
   },
-  radioItem: {
+  item: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 4
   },
-  radioLabel: {
+  text: {
     marginLeft: 8,
-    fontSize: 16,
+    fontSize: 16
   },
-  saveButton: {
+  save: {
     marginTop: 16,
-    marginBottom: 32,
+    marginBottom: 32
   },
-  saveButtonContent: {
-    paddingVertical: 8,
-  },
-  modalOverlay: {
+  back: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: 20
   },
-  modalContent: {
+  popup: {
     width: '100%',
-    maxHeight: '70%',
+    maxHeight: '70%'
   },
-  modalTitle: {
+  head: {
     textAlign: 'center',
     color: '#6200ee',
-    marginBottom: 8,
+    marginBottom: 8
   },
-  modalDivider: {
-    marginBottom: 16,
+  line: {
+    marginBottom: 16
   },
-  categoryItem: {
-    paddingVertical: 4,
+  pick: {
+    paddingVertical: 4
   },
-  cancelButton: {
-    marginTop: 16,
-  },
-});
+  cancel: {
+    marginTop: 16
+  }
+})
