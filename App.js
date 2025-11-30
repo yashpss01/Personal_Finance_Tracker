@@ -1,44 +1,78 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { PaperProvider } from 'react-native-paper'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 import Home from './src/screens/HomeScreen'
-import AddMoney from './src/screens/AddTransactionScreen'
+import Add from './src/screens/AddTransactionScreen'
 import History from './src/screens/TransactionsScreen'
+import Analytics from './src/screens/AnalyticsScreen'
+import Settings from './src/screens/SettingsScreen'
 
-const Tabs = createBottomTabNavigator()
+import { TransactionProvider } from './src/context/TransactionContext'
+import { ThemeProvider, ThemeContext } from './src/context/ThemeContext'
 
-function getIcon(screenName, isActive) {
-  if (screenName === 'Home') return isActive ? 'home' : 'home-outline'
-  if (screenName === 'Add Money') return isActive ? 'plus-circle' : 'plus-circle-outline'
-  if (screenName === 'History') return 'format-list-bulleted'
+const Tab = createBottomTabNavigator()
+
+function icon(name, focused) {
+  if (name === 'Home') return focused ? 'home' : 'home-outline'
+  if (name === 'Add') return focused ? 'plus-circle' : 'plus-circle-outline'
+  if (name === 'History') return focused ? 'format-list-bulleted' : 'format-list-bulleted'
+  if (name === 'Analytics') return focused ? 'chart-bar' : 'chart-bar'
+  if (name === 'Settings') return focused ? 'cog' : 'cog-outline'
+  return 'circle'
+}
+
+function Root() {
+  const { theme } = useContext(ThemeContext)
+
+  return (
+    <PaperProvider theme={theme}>
+      <NavigationContainer theme={theme}>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused, color, size }) => (
+              <MaterialCommunityIcons
+                name={icon(route.name, focused)}
+                size={size}
+                color={color}
+              />
+            ),
+            tabBarActiveTintColor: theme.colors.primary,
+            tabBarInactiveTintColor: theme.colors.onSurfaceVariant,
+            headerShown: false,
+            tabBarStyle: {
+              backgroundColor: theme.colors.surface,
+              borderTopColor: 'transparent',
+              elevation: 0,
+              height: 80,
+              paddingBottom: 20,
+              paddingTop: 10
+            },
+            tabBarLabelStyle: {
+              fontSize: 12,
+              fontWeight: '600'
+            }
+          })}
+        >
+          <Tab.Screen name="Home" component={Home} />
+          <Tab.Screen name="Analytics" component={Analytics} />
+          <Tab.Screen name="Add" component={Add} />
+          <Tab.Screen name="History" component={History} />
+          <Tab.Screen name="Settings" component={Settings} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
+  )
 }
 
 export default function App() {
   return (
-    <PaperProvider>
-      <NavigationContainer>
-        <Tabs.Navigator
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ focused, color, size }) => (
-              <MaterialCommunityIcons 
-                name={getIcon(route.name, focused)} 
-                size={size} 
-                color={color} 
-              />
-            ),
-            tabBarActiveTintColor: '#6200ee',
-            tabBarInactiveTintColor: 'gray',
-            headerShown: false
-          })}
-        >
-          <Tabs.Screen name="Home" component={Home} />
-          <Tabs.Screen name="Add Money" component={AddMoney} />
-          <Tabs.Screen name="History" component={History} />
-        </Tabs.Navigator>
-      </NavigationContainer>
-    </PaperProvider>
+    <TransactionProvider>
+      <ThemeProvider>
+        <Root />
+      </ThemeProvider>
+    </TransactionProvider>
   )
 }
