@@ -1,70 +1,57 @@
-# Personal Finance Tracker - Stage 1
+# Personal Finance Tracker
 
-A simple React Native app for tracking personal finances, built with React Native Paper.
+A mobile application built with React Native and Expo to help you track your income and expenses. It's designed to be simple, fast, and work offline.
 
-## Features (Stage 1)
+## Features
 
-- **Bottom Tab Navigation** with 3 screens:
-  - Home (Dashboard)
-  - Add Transaction
-  - Transactions (List)
+- **Dashboard**: See your total balance, income, and expense totals at a glance.
+- **Transaction Management**: Easily add new income or expense records with categories.
+- **History**: View a list of all your past transactions.
+- **Analytics**: Visualise your spending and income with pie charts. You can toggle between "All Time" and "This Month" views.
+- **Dark Mode**: Switch between light and dark themes in settings.
+- **Offline Storage**: Data is saved locally on your device using AsyncStorage, so it persists between restarts.
 
-- **Home Screen**:
-  - Current balance display (default: $0.00)
-  - Monthly summary placeholder
-  - Floating Action Button to add transactions
+## Tech Stack
 
-- **Add Transaction Screen**:
-  - Amount input
-  - Category input (text field)
-  - Type selection (Income/Expense radio buttons)
-  - Date display (today's date)
-  - Save button with confirmation alert
-
-- **Transactions Screen**:
-  - Placeholder for future transaction list
+- **React Native** (via Expo)
+- **React Navigation** (Bottom Tabs)
+- **React Native Paper** (UI Components)
+- **React Native Chart Kit** (Analytics)
+- **AsyncStorage** (Local Data Persistence)
 
 ## Getting Started
 
-1. Install dependencies:
+### Prerequisites
+
+- Node.js installed
+- Expo Go app on your phone (or an emulator set up)
+
+### Installation
+
+1. Clone the repo
+   ```bash
+   git clone <repo-url>
+   ```
+2. Install dependencies
    ```bash
    npm install
    ```
-
-2. Start the development server:
+3. Start the app
    ```bash
    npm start
    ```
 
-3. Use Expo Go app on your phone to scan the QR code, or run on simulator:
-   ```bash
-   npm run ios    # for iOS simulator
-   npm run android # for Android emulator
-   ```
-
-## Tech Stack
-
-- React Native
-- React Native Paper (UI components)
-- React Navigation (Bottom tabs)
-- Expo
-
 ## Project Structure
 
-```
-src/
-  screens/
-    HomeScreen.js
-    AddTransactionScreen.js
-    TransactionsScreen.js
-App.js
-```
+- `App.js`: Main entry point, sets up navigation and themes.
+- `src/screens`: Contains all the screen components (Home, Add, Analytics, History, Settings).
+- `src/context`: Context providers for global state (Transactions, Theme).
 
-## Next Steps (Future Stages)
+## Notes
 
-- Add data persistence (AsyncStorage or SQLite)
-- Implement actual transaction storage and display
-- Add transaction editing/deletion
-- Implement categories management
-- Add charts and analytics
-- Improve date picker functionality
+- The app uses a custom color palette for charts (Red/Warm for expenses, Green/Cool for income).
+- Data is currently local-only.
+
+## License
+
+MIT
