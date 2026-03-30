@@ -19,15 +19,23 @@ export default function Analytics() {
         const y = now.getFullYear();
 
         return transactions.filter(t => {
-            const d = new Date(t.date);
-            if (isNaN(d.getTime())) {
+            // Priority: Use the reliable Firebase ISO string. 
+            // Fallback: Use the localized date string for older offline entries.
+            const d = new Date(t.createdAt || t.date);
+            
+            if (!isNaN(d.getTime())) {
+                return d.getMonth() === m && d.getFullYear() === y;
+            }
+
+            // Ultimate fallback for custom locale string like DD/MM/YYYY failing Date parse
+            if (t.date && t.date.includes('/')) {
                 const p = t.date.split('/');
                 if (p.length === 3) {
+                    // Assuming DD/MM/YYYY format based on JS engine failure
                     return parseInt(p[1]) - 1 === m && parseInt(p[2]) === y;
                 }
-                return false;
             }
-            return d.getMonth() === m && d.getFullYear() === y;
+            return false;
         });
     };
 
