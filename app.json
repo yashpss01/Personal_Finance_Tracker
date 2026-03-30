@@ -5,7 +5,11 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "sdkVersion": "54.0.0",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
@@ -20,10 +24,16 @@
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.yashpss01.personalfinancetracker"
     },
     "web": {
       "bundler": "metro"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "ec67b60f-4e38-43a5-8626-135c23218033"
+      }
     }
   }
 }

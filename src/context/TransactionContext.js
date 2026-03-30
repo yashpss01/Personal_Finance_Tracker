@@ -1,5 +1,7 @@
-import React, { createContext, useReducer, useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useReducer, useEffect, useContext } from 'react';
+import { db } from '../config/firebase';
+import { collection, doc, setDoc, deleteDoc, onSnapshot, query, orderBy } from 'firebase/firestore';
+import { AuthContext } from './AuthContext';
 
 export const TransactionContext = createContext();
 
@@ -11,69 +13,58 @@ const reducer = (state, action) => {
     if (action.type === 'LOAD') {
         return { ...state, transactions: action.payload };
     }
-
-    if (action.type === 'ADD') {
-        const newTx = action.payload;
-        return {
-            ...state,
-            transactions: [newTx, ...state.transactions]
-        };
-    }
-
-    if (action.type === 'DEL') {
-        const id = action.payload;
-        return {
-            ...state,
-            transactions: state.transactions.filter(x => x.id !== id)
-        };
-    }
+    
 
     return state;
 };
 
 export const TransactionProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, INIT_STATE);
-    const [ready, setReady] = useState(false);
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        const fetch = async () => {
-            try {
-                const raw = await AsyncStorage.getItem('transactions');
-                if (raw) {
-                    const data = JSON.parse(raw);
-                    dispatch({ type: 'LOAD', payload: data });
-                }
-            } catch (err) {
-                // console.log(err);
-            } finally {
-                setReady(true);
-            }
-        };
+        if (!user) {
+            dispatch({ type: 'LOAD', payload: [] });
+            return;
+        }
 
-        fetch();
-    }, []);
+        // Query transactions ordered by created time descending
+        const q = query(
+            collection(db, `users/${user.uid}/transactions`),
+            orderBy('createdAt', 'desc')
+        );
 
-    useEffect(() => {
-        if (!ready) return;
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const data = snapshot.docs.map(doc => ({
+                ...doc.data(),
+                id: doc.id // use firestore doc id or the one mapped
+            }));
+            dispatch({ type: 'LOAD', payload: data });
+        });
 
-        const sync = async () => {
-            try {
-                const json = JSON.stringify(state.transactions);
-                await AsyncStorage.setItem('transactions', json);
-            } catch (err) {
-                console.log("Error syncing data");
-            }
-        };
+        return () => unsubscribe();
+    }, [user]);
 
-        sync();
-    }, [state.transactions, ready]);
+    const addTransaction = async (tx) => {
+        if (!user) return;
+        try {
 
-    const addTransaction = (tx) => {
-        dispatch({ type: 'ADD', payload: tx });
+            await setDoc(doc(db, `users/${user.uid}/transactions`, tx.id), {
+                ...tx,
+                createdAt: new Date().toISOString() // add timestamp for sorting
+            });
+        } catch (err) {
+            console.error("Error adding transaction", err);
+        }
     };
 
-    const deleteTransaction = (id) => {
-        dispatch({ type: 'DEL', payload: id });
+    const deleteTransaction = async (id) => {
+        if (!user) return;
+        try {
+            await deleteDoc(doc(db, `users/${user.uid}/transactions`, id));
+        } catch (err) {
+            console.error("Error deleting transaction", err);
+        }
     };
 
     return (
