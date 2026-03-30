@@ -1,13 +1,13 @@
 import React, { useState, useContext } from 'react';
 import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Platform, Alert } from 'react-native';
-import { TextInput, Button, SegmentedButtons, Chip, Text, useTheme, Appbar } from 'react-native-paper';
+import { TextInput, Button, SegmentedButtons, Chip, Text, useTheme, Appbar, Portal, Dialog } from 'react-native-paper';
 import { TransactionContext } from '../context/TransactionContext';
 
 const EXP_CATS = ['Food', 'Transport', 'Shopping', 'Bills', 'Entertainment', 'Health', 'Other'];
 const INC_CATS = ['Salary', 'Freelance', 'Investment', 'Gift', 'Other'];
 
 export default function AddTransactionScreen({ navigation }) {
-  const { addTransaction } = useContext(TransactionContext);
+  const { addTransaction, customCategories, addCustomCategory } = useContext(TransactionContext);
   const theme = useTheme();
 
   const [amt, setAmt] = useState('');
@@ -15,7 +15,14 @@ export default function AddTransactionScreen({ navigation }) {
   const [txType, setTxType] = useState('Expense');
   const [cat, setCat] = useState('');
 
-  const list = txType === 'Expense' ? EXP_CATS : INC_CATS;
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [newCatName, setNewCatName] = useState('');
+
+  const defaultList = txType === 'Expense' ? EXP_CATS : INC_CATS;
+  const customList = customCategories && customCategories[txType] ? customCategories[txType] : [];
+  
+  // Combine uniquely 
+  const list = [...new Set([...defaultList, ...customList])];
 
   const submit = () => {
     if (!amt || !cat) {
@@ -45,6 +52,22 @@ export default function AddTransactionScreen({ navigation }) {
     setCat('');
 
     navigation.goBack();
+  };
+
+  const handleAddCustom = async () => {
+    if (!newCatName.trim()) return;
+    
+    // Optimistic UI update: Close dialog and select category immediately
+    const catName = newCatName.trim();
+    setCat(catName);
+    setDialogVisible(false);
+    setNewCatName('');
+
+    try {
+      await addCustomCategory(txType, catName);
+    } catch (e) {
+      Alert.alert('Error', 'Failed to save new category');
+    }
   };
 
   return (
@@ -101,6 +124,14 @@ export default function AddTransactionScreen({ navigation }) {
                 {c}
               </Chip>
             ))}
+            <Chip
+              icon="plus"
+              mode="outlined"
+              onPress={() => setDialogVisible(true)}
+              style={styles.chip}
+            >
+              Add Custom
+            </Chip>
           </View>
 
           <Button
@@ -114,6 +145,25 @@ export default function AddTransactionScreen({ navigation }) {
 
         </ScrollView>
       </KeyboardAvoidingView>
+
+      <Portal>
+        <Dialog visible={dialogVisible} onDismiss={() => setDialogVisible(false)}>
+          <Dialog.Title>New {txType} Category</Dialog.Title>
+          <Dialog.Content>
+            <TextInput
+              label="Category Name"
+              value={newCatName}
+              onChangeText={setNewCatName}
+              mode="outlined"
+              autoFocus
+            />
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={() => setDialogVisible(false)}>Cancel</Button>
+            <Button onPress={handleAddCustom} disabled={!newCatName.trim()}>Save</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </View>
   );
 }
@@ -142,6 +192,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
     marginBottom: 32
+  },
+  chip: {
+    marginBottom: 4,
   },
   btn: {
     borderRadius: 12,
